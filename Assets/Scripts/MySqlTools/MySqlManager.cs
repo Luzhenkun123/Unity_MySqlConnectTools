@@ -44,7 +44,7 @@ public class ColumnData
     public DataType columnType;
     public string originColumnName;
     public string newColumnName;
-    public bool isPrimaryKey, canNull;
+    public bool isPrimaryKey, canNull,autoIncrement;
     public int length;
 
     /// <summary>
@@ -53,6 +53,7 @@ public class ColumnData
     /// <param name="columnType">属性类型</param>
     /// <param name="columnName">属性名</param>
     /// <param name="isPrimaryKey">是否为主键</param>
+    /// <param name="autoIncrement">是否自增</param>
     /// <param name="canNull">是否可以为空</param>
     /// <param name="length">类型长度</param>
     public ColumnData(DataType columnType, string columnName, bool isPrimaryKey, bool canNull, int length)
@@ -71,6 +72,16 @@ public class ColumnData
         this.newColumnName = newColumnName;
         this.isPrimaryKey = isPrimaryKey;
         this.canNull = canNull;
+        this.length = length;
+    }
+
+    public ColumnData(DataType columnType, string newColumnName, bool isPrimaryKey, bool canNull, bool autoIncrement, int length)
+    {
+        this.columnType = columnType;
+        this.newColumnName = newColumnName;
+        this.isPrimaryKey = isPrimaryKey;
+        this.canNull = canNull;
+        this.autoIncrement = autoIncrement;
         this.length = length;
     }
 }
@@ -586,6 +597,7 @@ public class MySqlManager : BaseManager<MySqlManager>
         string dataType = "";
         string isPrimaryKey = "";
         string canNull = "";
+        string autoIncrement = "";
         for (int i = 0; i < datas.Length; i++)
         {
             if (datas[i].isPrimaryKey)
@@ -601,7 +613,8 @@ public class MySqlManager : BaseManager<MySqlManager>
             dataLength = datas[i].length > 0 ? "(" + datas[i].length + ")" : "";
             isPrimaryKey = datas[i].isPrimaryKey ? "PRIMARY KEY" : "";
             canNull = datas[i].canNull ? "" : "NOT NULL";
-            resultArray[i] = $"{datas[i].newColumnName} {dataType}{dataLength} {isPrimaryKey} {canNull}";
+            autoIncrement = datas[i].autoIncrement ? "AUTO_INCREMENT":"";
+            resultArray[i] = $"{datas[i].newColumnName} {dataType}{dataLength} {isPrimaryKey} {canNull} {autoIncrement}";
         }
         return resultArray;
     }

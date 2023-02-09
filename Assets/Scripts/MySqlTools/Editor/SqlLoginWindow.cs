@@ -356,6 +356,20 @@ public class SqlLoginWindow : EditorWindow
                     currentPressTypeBtnIndex = i;
                     InitChooseVaribleTypeMenu();
                 }
+                if(varData.varType!=null)
+                {
+                    DataType varType = (DataType)Enum.Parse(typeof(DataType), varData.varType);
+                    switch (varType)
+                    {
+                        case DataType.TINYINT:
+                        case DataType.SMALLINT:
+                        case DataType.MEDIUMINT:
+                        case DataType.INT:
+                        case DataType.BIGINT:
+                            varData.isAutoIncrement = GUI.Toggle(new Rect(150, 20, 50, 20), varData.isAutoIncrement, "自增");
+                            break;
+                    }
+                }
 
                 //GUI.Label(new Rect(10, 40, 60, 20), "主键");
                 varData.IsPrimaryKey=GUI.Toggle(new Rect(15, 40, 50, 20), varData.IsPrimaryKey, "主键");
@@ -883,6 +897,7 @@ public class VariableData
     public string varName, varType;
     private bool isPrimaryKey;
     public bool canNull;
+    public bool isAutoIncrement;
     public bool IsPrimaryKey
     {
         get
@@ -915,7 +930,7 @@ public class VariableData
         DataType dtType = (DataType)Enum.Parse(typeof(DataType), varType);
         int charLength = 0;
         int.TryParse(length,out charLength);
-        ColumnData columnData = new ColumnData(dtType, varName, isPrimaryKey, canNull, charLength);
+        ColumnData columnData = new ColumnData(dtType, varName, isPrimaryKey, canNull, isAutoIncrement, charLength);
         return columnData;
     }
 }
