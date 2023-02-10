@@ -437,6 +437,7 @@ public class MySqlManager : BaseManager<MySqlManager>
             if (dataParamsStr != "ERROR")
             {
                 string sql = $"create table {tableName}({dataParamsStr})";
+                Debug.Log(sql);
                 MySqlCommand sqlCmd = new MySqlCommand(sql, sqlConnection);
                 sqlCmd.ExecuteNonQuery();
 

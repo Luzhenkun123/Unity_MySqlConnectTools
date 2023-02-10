@@ -348,9 +348,8 @@ public class SqlLoginWindow : EditorWindow
                 GUI.Label(new Rect(10, 20, 60, 20), "属性类型：");
                 GUI.Label(new Rect(70, 20, 100, 20), varData.varType);
 
-                //字符类型才能设置长度
-                if(varData.varType == "CHAR"|| varData.varType == "VARCHAR")
-                    varData.length= GUI.TextField(new Rect(150, 20, 50, 20), varData.length);
+
+
                 if (GUI.Button(new Rect(205, 20, 85, 20), "选择属性类型"))
                 {
                     currentPressTypeBtnIndex = i;
@@ -359,6 +358,33 @@ public class SqlLoginWindow : EditorWindow
                 if(varData.varType!=null)
                 {
                     DataType varType = (DataType)Enum.Parse(typeof(DataType), varData.varType);
+                    //字符类型才能设置长度
+                    switch (varType)
+                    {
+                        case DataType.CHAR:
+                        case DataType.VARCHAR:
+                            varData.length = GUI.TextField(new Rect(150, 20, 50, 20), varData.length);
+                            break;
+                    }
+
+                    //这两种类型不支持当主键
+                    bool canSetPrimaryKey = true;
+                    switch (varType)
+                    {
+                        case DataType.TINYTEXT:
+                        case DataType.TEXT:
+                        case DataType.MEDIUMTEXT:
+                        case DataType.LONGTEXT:
+                        case DataType.TINYBLOB:
+                        case DataType.BLOB:
+                        case DataType.MEDIUMBLOB:
+                        case DataType.LONGBLOB:
+                            canSetPrimaryKey = false;
+                            break;
+                    }
+                    if(canSetPrimaryKey)
+                        varData.IsPrimaryKey = GUI.Toggle(new Rect(100, 40, 50, 20), varData.IsPrimaryKey, "主键");
+
                     switch (varType)
                     {
                         case DataType.TINYINT:
@@ -372,8 +398,7 @@ public class SqlLoginWindow : EditorWindow
                 }
 
                 //GUI.Label(new Rect(10, 40, 60, 20), "主键");
-                varData.IsPrimaryKey=GUI.Toggle(new Rect(15, 40, 50, 20), varData.IsPrimaryKey, "主键");
-                varData.canNull=GUI.Toggle(new Rect(100, 40, 50, 20), varData.canNull, "可空");
+                varData.canNull=GUI.Toggle(new Rect(15, 40, 50, 20), varData.canNull, "可空");
 
                 if (i==newTableFieldCount-1&&GUI.Button(new Rect(270,0, 20, 20), "-"))
                 {
