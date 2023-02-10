@@ -385,6 +385,34 @@ public class MySqlManager : BaseManager<MySqlManager>
         return dataSet;
     }
     /// <summary>
+    /// 查询是否有数据存在
+    /// </summary>
+    /// <param name="sql"></param>
+    /// <returns></returns>
+    public bool QueryHasRows(string sql)
+    {
+        bool result = false;
+        try
+        {
+            MySqlCommand sqlCmd = new MySqlCommand(sql, sqlConnection);
+            using (MySqlDataReader reader = sqlCmd.ExecuteReader())
+            {
+                result = reader.HasRows;
+            }
+        }
+        catch (Exception e)
+        {
+            OutException("查询是否有数据", e);
+            throw;
+        }
+        return result;
+    }
+    public bool QueryHasRows(string tableName,string condition=null)
+    {
+        condition = condition == null ? "" : "where " + condition;
+        return QueryHasRows($"select * from {tableName} {condition}");
+    }
+    /// <summary>
     /// 修改数据
     /// </summary>
     /// <param name="tableName">表名</param>
